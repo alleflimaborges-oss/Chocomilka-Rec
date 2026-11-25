@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2b1810">
+    <title>Funcionários | Chocomilka</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="/funcionarios.js" defer></script>
+</head>
+<body class="pagina-estoque pagina-cadastro">
+    <a class="pular" href="#lista">Ir para a lista de funcionários</a>
+
+    <header class="topo">
+        <div class="topo-conteudo">
+            <span class="marca">Chocomilka</span>
+            <nav class="menu" aria-label="Principal">
+                <a href="/">Estoque</a>
+                <a href="/catalogo">Catálogo</a>
+                <a href="/historico">Histórico</a>
+                <a href="/fornecedores">Fornecedores</a>
+                <a href="/funcionarios" aria-current="page">Funcionários</a>
+                <a href="/sobre">Sobre o site</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="resumo">
+            <h1 id="tituloPagina">Funcionários</h1>
+            <p id="subtituloPagina">Carregando os funcionários…</p>
+            <p>As movimentações feitas pelo site ainda são registradas em nome do “Funcionário padrão”.</p>
+        </section>
+
+        <section class="painel" id="lista" aria-label="Funcionários cadastrados">
+            <div class="barra">
+                <div class="busca-campo">
+                    <label for="busca" class="so-leitor">Pesquisar funcionário</label>
+                    <input type="search" id="busca" placeholder="Pesquisar por nome ou cargo" autocomplete="off">
+                </div>
+                <div class="barra-direita">
+                    <button type="button" id="botaoNovo" class="primario">+ Novo funcionário</button>
+                </div>
+            </div>
+
+            <div class="tabela-responsiva">
+                <table class="tabela-cadastro">
+                    <thead>
+                        <tr>
+                            <th scope="col">Funcionário</th>
+                            <th scope="col">Cargo</th>
+                            <th scope="col">Movimentações</th>
+                            <th scope="col"><span class="so-leitor">Ações</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaItens"></tbody>
+                </table>
+            </div>
+            <p id="contador" class="contador" aria-live="polite"></p>
+        </section>
+    </main>
+
+
+    <dialog id="dialogoCadastro" aria-labelledby="tituloDialogo">
+        <form id="formCadastro" novalidate>
+            <div class="dialogo-topo">
+                <h2 id="tituloDialogo">Novo funcionário</h2>
+                <button type="button" class="icone" id="fecharDialogo" aria-label="Fechar">✕</button>
+            </div>
+            <input type="hidden" id="itemId">
+            <div id="erroGeral" class="alerta" role="alert" hidden></div>
+
+            <div class="grade-form">
+                <div class="campo">
+                    <label for="nome">Nome</label>
+                    <input type="text" id="nome" maxlength="80" placeholder="Ex.: Ana Souza" autocomplete="off" aria-describedby="erro-nome">
+                    <span class="erro-campo" id="erro-nome"></span>
+                </div>
+                <div class="campo">
+                    <label for="cargo">Cargo</label>
+                    <input type="text" id="cargo" maxlength="80" list="listaCargos" placeholder="Ex.: Estoquista" autocomplete="off" aria-describedby="erro-cargo">
+                    <datalist id="listaCargos"></datalist>
+                    <span class="erro-campo" id="erro-cargo"></span>
+                </div>
+            </div>
+
+            <div class="acoes-form">
+                <button type="button" class="secundario" id="botaoCancelar">Cancelar</button>
+                <button type="submit" class="primario" id="botaoSalvar">Cadastrar funcionário</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="dialogoExcluir" aria-labelledby="tituloExcluir" aria-describedby="textoExcluir">
+        <div class="dialogo-corpo">
+            <h2 id="tituloExcluir">Excluir funcionário?</h2>
+            <p id="textoExcluir"></p>
+            <div class="acoes-form">
+                <button type="button" class="secundario" id="cancelarExclusao">Cancelar</button>
+                <button type="button" class="perigo" id="confirmarExclusao">Excluir funcionário</button>
+            </div>
+        </div>
+    </dialog>
+
+    <div id="avisos" class="avisos" role="status" aria-live="polite"></div>
+</body>
+</html>

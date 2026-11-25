@@ -1,0 +1,22 @@
+classDiagram
+    class Produto {
+        +int id
+        +str nome
+        +str categoria
+        +int quantidade
+        +int estoque_minimo
+        +str localizacao
+        +to_dict()
+    }
+
+    class ProdutoDAO {
+        -str caminho_banco
+        +criar_tabela()
+        +buscar_todos()
+        +buscar_por_id(id)
+        +inserir(produto)
+        +atualizar(id, produto)
+        +remover(id)
+    }
+
+    ProdutoDAO ..> Produto : cria e consulta

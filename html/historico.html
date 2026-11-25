@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2b1810">
+    <title>Histórico | Chocomilka</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="/historico.js" defer></script>
+</head>
+<body class="pagina-estoque pagina-historico">
+    <a class="pular" href="#lista">Ir para a lista de movimentações</a>
+
+    <header class="topo">
+        <div class="topo-conteudo">
+            <span class="marca">Chocomilka</span>
+            <nav class="menu" aria-label="Principal">
+                <a href="/">Estoque</a>
+                <a href="/catalogo">Catálogo</a>
+                <a href="/historico" aria-current="page">Histórico</a>
+                <a href="/fornecedores">Fornecedores</a>
+                <a href="/funcionarios">Funcionários</a>
+                <a href="/sobre">Sobre o site</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="resumo">
+            <h1 id="tituloHistorico">Histórico de movimentações</h1>
+            <p id="subtituloHistorico">Carregando o histórico…</p>
+        </section>
+
+        <section class="painel" id="lista" aria-label="Movimentações de estoque">
+            <div class="barra">
+                <div class="busca-campo">
+                    <label for="busca" class="so-leitor">Pesquisar por produto, observação ou funcionário</label>
+                    <input type="search" id="busca" placeholder="Pesquisar produto, observação ou funcionário" autocomplete="off">
+                </div>
+                <div class="barra-direita">
+                    <label for="periodo" class="so-leitor">Período</label>
+                    <select id="periodo">
+                        <option value="tudo">Todo o período</option>
+                        <option value="hoje">Hoje</option>
+                        <option value="7">Últimos 7 dias</option>
+                    </select>
+                    <button type="button" id="botaoAtualizar" class="primario">Atualizar</button>
+                </div>
+            </div>
+
+            <div class="filtros" role="group" aria-label="Filtrar por tipo">
+                <button type="button" class="chip" data-filtro="todos" aria-pressed="true">Todas <span id="n-todos">0</span></button>
+                <button type="button" class="chip" data-filtro="entrada" aria-pressed="false">Entradas <span id="n-entrada">0</span></button>
+                <button type="button" class="chip" data-filtro="saida" aria-pressed="false">Saídas <span id="n-saida">0</span></button>
+            </div>
+
+            <div class="tabela-responsiva">
+                <table class="tabela-historico">
+                    <thead>
+                        <tr>
+                            <th scope="col">Hora</th>
+                            <th scope="col">Produto</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Quantidade</th>
+                            <th scope="col">Observação</th>
+                            <th scope="col">Funcionário</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaMovimentacoes"></tbody>
+                </table>
+            </div>
+            <p id="contador" class="contador" aria-live="polite"></p>
+        </section>
+    </main>
+
+
+</body>
+</html>
