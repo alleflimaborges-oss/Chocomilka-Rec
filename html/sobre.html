@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2b1810">
+    <title>Sobre o site | Chocomilka</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="pagina-sobre">
+    <a class="pular" href="#conteudo">Ir para o conteúdo</a>
+
+    <header class="topo">
+        <div class="topo-conteudo">
+            <span class="marca">Chocomilka</span>
+            <nav class="menu" aria-label="Principal">
+                <a href="/">Estoque</a>
+                <a href="/catalogo">Catálogo</a>
+                <a href="/historico">Histórico</a>
+                <a href="/fornecedores">Fornecedores</a>
+                <a href="/funcionarios">Funcionários</a>
+                <a href="/sobre" aria-current="page">Sobre o site</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" id="conteudo">
+        <section class="resumo sobre-intro">
+            <h1>Um estoque que avisa antes de acabar o chocolate.</h1>
+            <p>A Chocomilka é um sistema web para uma loja de chocolates controlar o que tem na prateleira,
+               o que está acabando e quando cada produto vence.</p>
+            <p class="ao-vivo" id="aoVivo" aria-live="polite">Consultando o banco de dados…</p>
+        </section>
+
+        <section class="painel" aria-labelledby="t-problema">
+            <h2 id="t-problema">O problema que o site resolve</h2>
+            <div class="trio">
+                <div>
+                    <h3>Antes</h3>
+                    <p>Anotações em papel e planilhas. Só se descobria que um produto acabou quando o cliente pedia.</p>
+                </div>
+                <div>
+                    <h3>Agora</h3>
+                    <p>Cada produto tem uma situação: em estoque, estoque baixo ou sem estoque. O que precisa de reposição aparece no topo.</p>
+                </div>
+                <div>
+                    <h3>No dia a dia</h3>
+                    <p>Chegou ou vendeu uma unidade? Um toque em <strong>+</strong> ou <strong>−</strong> atualiza o banco na hora.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="painel" aria-labelledby="t-camadas">
+            <h2 id="t-camadas">O caminho de um clique</h2>
+            <p class="lead">Escolha uma etapa para ver o que ela faz quando você aperta o botão <strong>+</strong> de um produto.</p>
+
+            <div class="camadas" role="tablist" aria-label="Etapas do caminho">
+                <button type="button" role="tab" id="aba-0" aria-controls="painel-0" aria-selected="true" data-i="0"><span>1</span>Navegador</button>
+                <button type="button" role="tab" id="aba-1" aria-controls="painel-1" aria-selected="false" tabindex="-1" data-i="1"><span>2</span>Flask</button>
+                <button type="button" role="tab" id="aba-2" aria-controls="painel-2" aria-selected="false" tabindex="-1" data-i="2"><span>3</span>DAO</button>
+                <button type="button" role="tab" id="aba-3" aria-controls="painel-3" aria-selected="false" tabindex="-1" data-i="3"><span>4</span>SQLite</button>
+            </div>
+
+            <div class="camada-painel" role="tabpanel" id="painel-0" aria-labelledby="aba-0">
+                <p class="arquivo">script.js</p>
+                <p>O JavaScript percebe o clique e envia um pedido <code>PATCH /produtos/7/quantidade</code> com <code>{"variacao": 1}</code>. Quando a resposta chega, só a tela é atualizada, sem recarregar a página.</p>
+            </div>
+            <div class="camada-painel" role="tabpanel" id="painel-1" aria-labelledby="aba-1" hidden>
+                <p class="arquivo">app.py</p>
+                <p>A rota recebe o pedido, confere se a variação é um número inteiro e entrega o trabalho ao DAO. Se o produto não existir, responde com erro 404 e uma mensagem clara.</p>
+            </div>
+            <div class="camada-painel" role="tabpanel" id="painel-2" aria-labelledby="aba-2" hidden>
+                <p class="arquivo">dao.py + models.py</p>
+                <p>O <code>ProdutoDAO</code> é o único que conversa com o banco. Ele soma a quantidade com segurança, sem deixar ficar negativa. A classe <code>Produto</code> calcula a situação (em estoque, baixo ou sem estoque).</p>
+            </div>
+            <div class="camada-painel" role="tabpanel" id="painel-3" aria-labelledby="aba-3" hidden>
+                <p class="arquivo">database/chocomilka.db</p>
+                <p>O SQLite guarda tudo em um arquivo, sem precisar instalar servidor. São cinco tabelas ligadas por chaves estrangeiras (categorias, fornecedores, funcionários, produtos e movimentações), com regras (<code>CHECK</code>) que impedem quantidade negativa mesmo se algo falhar antes.</p>
+            </div>
+        </section>
+
+        <section class="painel" aria-labelledby="t-api">
+            <h2 id="t-api">Rotas da API</h2>
+            <div class="tabela-responsiva">
+                <table class="tabela-simples">
+                    <thead>
+                        <tr><th scope="col">Método</th><th scope="col">Rota</th><th scope="col">O que faz</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>GET</code></td><td><code>/produtos</code></td><td>Lista todos os produtos</td></tr>
+                        <tr><td><code>POST</code></td><td><code>/produtos</code></td><td>Cadastra um produto</td></tr>
+                        <tr><td><code>GET</code></td><td><code>/produtos/&lt;id&gt;</code></td><td>Busca um produto</td></tr>
+                        <tr><td><code>PUT</code></td><td><code>/produtos/&lt;id&gt;</code></td><td>Edita um produto</td></tr>
+                        <tr><td><code>PATCH</code></td><td><code>/produtos/&lt;id&gt;/quantidade</code></td><td>Soma ou subtrai da quantidade</td></tr>
+                        <tr><td><code>DELETE</code></td><td><code>/produtos/&lt;id&gt;</code></td><td>Exclui um produto</td></tr>
+                        <tr><td><code>POST</code></td><td><code>/produtos/&lt;id&gt;/foto</code></td><td>Envia a foto do produto (JPG, PNG ou WEBP)</td></tr>
+                        <tr><td><code>GET</code> / <code>DELETE</code></td><td><code>/produtos/&lt;id&gt;/foto</code></td><td>Mostra ou remove a foto</td></tr>
+                        <tr><td><code>GET</code> / <code>POST</code></td><td><code>/api/fornecedores</code></td><td>Lista ou cadastra fornecedores</td></tr>
+                        <tr><td><code>PUT</code> / <code>DELETE</code></td><td><code>/api/fornecedores/&lt;id&gt;</code></td><td>Edita ou exclui um fornecedor</td></tr>
+                        <tr><td><code>GET</code> / <code>POST</code></td><td><code>/api/funcionarios</code></td><td>Lista ou cadastra funcionários</td></tr>
+                        <tr><td><code>PUT</code> / <code>DELETE</code></td><td><code>/api/funcionarios/&lt;id&gt;</code></td><td>Edita ou exclui um funcionário</td></tr>
+                        <tr><td><code>GET</code></td><td><code>/movimentacoes</code></td><td>Lista o histórico de entradas e saídas (aceita <code>?limite=</code>)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="painel" aria-labelledby="t-design">
+            <h2 id="t-design">Escolhas de design</h2>
+            <p class="lead">As cores vêm do próprio produto: cacau, recheio de framboesa e a folha dourada da embalagem.</p>
+            <ul class="amostras">
+                <li><span class="cor" style="background:#2b1810"></span><strong>Cacau</strong> #2b1810 <small>topo e títulos</small></li>
+                <li><span class="cor" style="background:#b3264f"></span><strong>Framboesa</strong> #b3264f <small>ações principais</small></li>
+                <li><span class="cor" style="background:#e0b050"></span><strong>Folha dourada</strong> #e0b050 <small>detalhe e foco do teclado</small></li>
+                <li><span class="cor" style="background:#1b6340"></span><strong>Verde</strong> #1b6340 <small>em estoque</small></li>
+                <li><span class="cor" style="background:#7d4a00"></span><strong>Âmbar</strong> #7d4a00 <small>estoque baixo</small></li>
+                <li><span class="cor" style="background:#94192b"></span><strong>Vermelho</strong> #94192b <small>sem estoque</small></li>
+            </ul>
+            <p>A situação do estoque sempre aparece com ícone e texto, para quem não distingue cores. A página funciona só com teclado e se adapta ao celular.</p>
+        </section>
+
+        <section class="painel" aria-labelledby="t-tec">
+            <h2 id="t-tec">Tecnologias</h2>
+            <div class="filtros" role="list">
+                <span class="chip fixo" role="listitem">Python</span>
+                <span class="chip fixo" role="listitem">Flask</span>
+                <span class="chip fixo" role="listitem">SQLite</span>
+                <span class="chip fixo" role="listitem">HTML</span>
+                <span class="chip fixo" role="listitem">CSS</span>
+                <span class="chip fixo" role="listitem">JavaScript (Fetch API)</span>
+            </div>
+            <p>Projeto Integrado de DWS (Desenvolvimento Web), POO (Programação Orientada a Objetos) e Banco de Dados.</p>
+            <p><a class="botao-link" href="/">Ir para o estoque</a></p>
+        </section>
+    </main>
+
+
+    <script>
+        /* Dados ao vivo: mostra que a página conversa com o mesmo banco do estoque */
+        (async function () {
+            const alvo = document.getElementById("aoVivo");
+            try {
+                const resposta = await fetch("/produtos");
+                if (!resposta.ok) throw new Error();
+                const lista = await resposta.json();
+                const repor = lista.filter(p => p.situacao !== "ok").length;
+                const total = lista.length;
+                alvo.textContent = total === 0
+                    ? "Agora: nenhum produto cadastrado ainda."
+                    : `Agora no banco: ${total} ${total === 1 ? "produto" : "produtos"}, ${repor} ${repor === 1 ? "precisa" : "precisam"} de reposição.`;
+            } catch {
+                alvo.textContent = "Não foi possível consultar o banco agora.";
+            }
+        })();
+
+        /* Abas: clique e setas do teclado */
+        (function () {
+            const abas = [...document.querySelectorAll('[role="tab"]')];
+            const paineis = [...document.querySelectorAll('[role="tabpanel"]')];
+
+            function selecionar(i, focar) {
+                abas.forEach((aba, n) => {
+                    const ativa = n === i;
+                    aba.setAttribute("aria-selected", String(ativa));
+                    aba.tabIndex = ativa ? 0 : -1;
+                    paineis[n].hidden = !ativa;
+                });
+                if (focar) abas[i].focus();
+            }
+
+            abas.forEach((aba, i) => {
+                aba.addEventListener("click", () => selecionar(i));
+                aba.addEventListener("keydown", (e) => {
+                    if (e.key === "ArrowRight") { e.preventDefault(); selecionar((i + 1) % abas.length, true); }
+                    if (e.key === "ArrowLeft") { e.preventDefault(); selecionar((i - 1 + abas.length) % abas.length, true); }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

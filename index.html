@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2b1810">
+    <title>Chocomilka | Controle de estoque</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="/script.js" defer></script>
+</head>
+<body class="pagina-estoque">
+    <a class="pular" href="#lista">Ir para a lista de produtos</a>
+
+    <header class="topo">
+        <div class="topo-conteudo">
+            <span class="marca">Chocomilka</span>
+            <nav class="menu" aria-label="Principal">
+                <a href="/" aria-current="page">Estoque</a>
+                <a href="/catalogo">Catálogo</a>
+                <a href="/historico">Histórico</a>
+                <a href="/fornecedores">Fornecedores</a>
+                <a href="/funcionarios">Funcionários</a>
+                <a href="/sobre">Sobre o site</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Resumo: responde de cara "preciso fazer algo hoje?" -->
+        <section class="resumo" aria-labelledby="titulo-resumo">
+            <h1 id="titulo-resumo">Carregando estoque…</h1>
+            <p id="subtitulo-resumo">Buscando os produtos cadastrados.</p>
+        </section>
+
+        <section class="painel" id="lista" aria-label="Produtos cadastrados">
+            <div class="barra">
+                <div class="busca-campo">
+                    <label for="busca" class="so-leitor">Pesquisar produto, categoria ou fornecedor</label>
+                    <input type="search" id="busca" placeholder="Pesquisar produto, categoria ou fornecedor" autocomplete="off">
+                </div>
+                <div class="barra-direita">
+                    <label for="ordem" class="so-leitor">Ordenar por</label>
+                    <select id="ordem">
+                        <option value="atencao">Precisa de atenção primeiro</option>
+                        <option value="nome">Nome (A–Z)</option>
+                        <option value="recentes">Cadastrados recentemente</option>
+                    </select>
+                    <button type="button" id="botaoNovo" class="primario">+ Novo produto</button>
+                </div>
+            </div>
+
+            <div class="filtros" role="group" aria-label="Filtrar por situação">
+                <button type="button" class="chip" data-filtro="todos" aria-pressed="true">Todos <span id="n-todos">0</span></button>
+                <button type="button" class="chip" data-filtro="baixo" aria-pressed="false">Estoque baixo <span id="n-baixo">0</span></button>
+                <button type="button" class="chip" data-filtro="sem_estoque" aria-pressed="false">Sem estoque <span id="n-sem">0</span></button>
+            </div>
+
+            <div class="tabela-responsiva">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Produto</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col">Fornecedor</th>
+                            <th scope="col">Preço</th>
+                            <th scope="col">Quantidade</th>
+                            <th scope="col">Mínimo</th>
+                            <th scope="col">Validade</th>
+                            <th scope="col">Situação</th>
+                            <th scope="col"><span class="so-leitor">Ações</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaProdutos"></tbody>
+                </table>
+            </div>
+            <p id="contador" class="contador" aria-live="polite"></p>
+        </section>
+    </main>
+
+
+    <!-- Cadastro / edição -->
+    <dialog id="dialogoProduto" aria-labelledby="tituloDialogo">
+        <form id="formProduto" novalidate>
+            <div class="dialogo-topo">
+                <h2 id="tituloDialogo">Novo produto</h2>
+                <button type="button" class="icone" id="fecharDialogo" aria-label="Fechar">✕</button>
+            </div>
+            <input type="hidden" id="produtoId">
+            <div id="erroGeral" class="alerta" role="alert" hidden></div>
+
+            <div class="grade-form">
+                <div class="campo campo-largo">
+                    <label for="nome">Nome do produto</label>
+                    <input type="text" id="nome" maxlength="80" placeholder="Ex.: Barra ao leite 90 g" autocomplete="off" aria-describedby="erro-nome">
+                    <span class="erro-campo" id="erro-nome"></span>
+                </div>
+                <div class="campo">
+                    <label for="categoria">Categoria</label>
+                    <input type="text" id="categoria" maxlength="80" list="listaCategorias" placeholder="Ex.: Ao leite" autocomplete="off" aria-describedby="erro-categoria">
+                    <datalist id="listaCategorias"></datalist>
+                    <span class="erro-campo" id="erro-categoria"></span>
+                </div>
+                <div class="campo">
+                    <label for="fornecedor">Fornecedor</label>
+                    <input type="text" id="fornecedor" maxlength="80" list="listaFornecedores" placeholder="Ex.: Cacau Brasil" autocomplete="off" aria-describedby="erro-fornecedor">
+                    <datalist id="listaFornecedores"></datalist>
+                    <span class="erro-campo" id="erro-fornecedor"></span>
+                </div>
+                <div class="campo">
+                    <label for="preco">Preço (R$)</label>
+                    <input type="text" id="preco" inputmode="decimal" placeholder="Ex.: 12,90" autocomplete="off" aria-describedby="erro-preco">
+                    <span class="erro-campo" id="erro-preco"></span>
+                </div>
+                <div class="campo">
+                    <label for="validade">Validade <span class="opcional">(opcional)</span></label>
+                    <input type="date" id="validade" aria-describedby="erro-validade">
+                    <span class="erro-campo" id="erro-validade"></span>
+                </div>
+                <div class="campo">
+                    <label for="quantidade_estoque">Quantidade em estoque</label>
+                    <input type="number" id="quantidade_estoque" min="0" step="1" inputmode="numeric" placeholder="Ex.: 20" aria-describedby="erro-quantidade_estoque">
+                    <span class="erro-campo" id="erro-quantidade_estoque"></span>
+                </div>
+                <div class="campo">
+                    <label for="estoque_minimo">Estoque mínimo</label>
+                    <input type="number" id="estoque_minimo" min="0" step="1" inputmode="numeric" placeholder="Ex.: 5" aria-describedby="dica-minimo erro-estoque_minimo">
+                    <span class="dica" id="dica-minimo">Abaixo disso, o produto aparece como estoque baixo.</span>
+                    <span class="erro-campo" id="erro-estoque_minimo"></span>
+                </div>
+            </div>
+
+            <div class="acoes-form">
+                <button type="button" class="secundario" id="botaoCancelar">Cancelar</button>
+                <button type="submit" class="primario" id="botaoSalvar">Cadastrar produto</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Confirmação de exclusão -->
+    <dialog id="dialogoExcluir" aria-labelledby="tituloExcluir" aria-describedby="textoExcluir">
+        <div class="dialogo-corpo">
+            <h2 id="tituloExcluir">Excluir produto?</h2>
+            <p id="textoExcluir"></p>
+            <div class="acoes-form">
+                <button type="button" class="secundario" id="cancelarExclusao">Cancelar</button>
+                <button type="button" class="perigo" id="confirmarExclusao">Excluir produto</button>
+            </div>
+        </div>
+    </dialog>
+
+    <div id="avisos" class="avisos" role="status" aria-live="polite"></div>
+</body>
+</html>
